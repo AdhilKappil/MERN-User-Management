@@ -9,6 +9,8 @@ import genarateToken from '../utils/genarateToken.js'
 // @access  Public
 const authUser = asyncHandler(async(req,res)=>{
 
+  console.log('log try');
+
     const {email, password} = req.body
     
     const user = await User.findOne({email})
@@ -77,7 +79,7 @@ const logoutUser = asyncHandler(async(req,res)=>{
         httpOnly: true,
         expires: new Date(0)
     })
-    res.status(200).json({ message: 'Logged out successfully' });
+    res.status(200).json({ message: 'Logged out successfully'});
 })
 
 

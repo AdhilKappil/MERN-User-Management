@@ -12,11 +12,17 @@ import Login from './components/Login'
 import Register from './components/Register.jsx'
 import Profile from './components/Profile.jsx';
 import Dashboard from './components/dashboard.jsx';
+import store from './store.js';
+import { Provider } from 'react-redux';
+import Home from './components/Home.jsx';
+import { ThemeProvider } from "@material-tailwind/react";
+
+
 
 const router = createBrowserRouter(
   createRoutesFromElements(
-    <Route path='/' element={<App />}>
-      {/* <Route index={true} path='/' element={<Home/>} /> */}
+    <Route path='/' element={<App/>}>
+      <Route index={true} path='/' element={<Home/>} />
       <Route path='/login' element={<Login/>} />
       <Route path='/register' element={<Register/>} />
       <Route path='/dashboard' element={<Dashboard/>}/>
@@ -29,7 +35,11 @@ const router = createBrowserRouter(
 
 
 ReactDOM.createRoot(document.getElementById('root')).render(
+  <Provider store={store}>
   <React.StrictMode>
+  <ThemeProvider>
     <RouterProvider router={router} />
-  </React.StrictMode>,
+    </ThemeProvider>
+  </React.StrictMode>
+  </Provider>
 )

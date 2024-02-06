@@ -1,5 +1,41 @@
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { NavLink, useNavigate } from "react-router-dom";
+import { useLoginMutation } from "../slices/userApiSlice";
+import { setCredential } from "../slices/authSlices";
+import { toast } from 'react-toastify';
 
 function Login() {
+
+    const [email, setEmaiil] = useState('')
+    const [password, setPassword] = useState('')
+
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
+
+    const [login, { isLoading }] = useLoginMutation();
+
+    
+    const {userInfo} = useSelector((state)=>state.auth)
+    
+    useEffect(()=>{
+        if(userInfo){
+            navigate('/')
+        }
+    },[navigate, userInfo])
+
+    const submitHandler = async(e)=>{
+        e.preventDefault();
+        try {
+            const res = await login({email, password}).unwrap();
+            dispatch(setCredential({...res}))
+            navigate('/')
+        } catch (err) {
+            toast.error(err?.data?.message || err.error);
+        }
+    }
+
+
     return (
       <div className="flex justify-center items-center h-svh">
         <div className="relative flex w-96 flex-col rounded-xl bg-white bg-clip-border text-gray-700 shadow-md">
@@ -11,7 +47,8 @@ function Login() {
 
           <div className="flex flex-col gap-4 p-6">
             <div className="relative h-11 w-full min-w-[200px]">
-              <input
+              <input onChange={(e)=> setEmaiil(e.target.value)}
+              value={email}
                 placeholder=""
                 className="peer h-full w-full rounded-md border border-blue-gray-200 border-t-transparent bg-transparent px-3 py-3 font-sans text-sm font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 focus:border-2 focus:border-cyan-500 focus:border-t-transparent focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50"
               />
@@ -23,7 +60,8 @@ function Login() {
             </div>
 
             <div className="relative h-11 w-full min-w-[200px]">
-              <input
+              <input onChange={(e)=> setPassword(e.target.value)}
+                value={password}
                 placeholder=""
                 className="peer h-full w-full rounded-md border border-blue-gray-200 border-t-transparent bg-transparent px-3 py-3 font-sans text-sm font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 focus:border-2 focus:border-cyan-500 focus:border-t-transparent focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50"
               />
@@ -37,7 +75,7 @@ function Login() {
           </div>
 
           <div className="p-6 pt-0">
-            <button
+            <button onClick={submitHandler}
               data-ripple-light="true"
               type="button"
               className="block w-full select-none rounded-lg bg-gradient-to-tr from-cyan-600 to-cyan-400 py-3 px-6 text-center align-middle font-sans text-xs font-bold uppercase text-white shadow-md shadow-cyan-500/20 transition-all hover:shadow-lg hover:shadow-cyan-500/40 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
@@ -45,13 +83,13 @@ function Login() {
               Sign In
             </button>
             <p className="mt-6 flex justify-center font-sans text-sm font-light leading-normal text-inherit antialiased">
-              Don't have an account?
-              <a
+              {`Don't have an account?`}
+              <NavLink
                 className="ml-1 block font-sans text-sm font-bold leading-normal text-cyan-500 antialiased"
-                href="#signup"
+                to={'/register'}
               >
                 Sign up
-              </a>
+              </NavLink>
             </p>
           </div>
           
