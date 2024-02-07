@@ -16,7 +16,11 @@ import store from './store.js';
 import { Provider } from 'react-redux';
 import Home from './components/Home.jsx';
 import { ThemeProvider } from "@material-tailwind/react";
-// import PrivateRoute from './components/PrivateRoute.js';
+import AdminLogin from './components/adminLogin.jsx';
+import AdminPrivateRoute from './components/AdminPrivateRour.jsx';
+import PrivateRoute from './components/PrivateRoute.jsx';
+
+
 
 
 
@@ -27,11 +31,14 @@ const router = createBrowserRouter(
     <Route path='/' element={<App/>}>
       <Route index={true} path='/' element={<Home/>} />
       <Route path='/login' element={<Login/>} />
+      <Route path='/admin' element={<AdminLogin/>}/>
       <Route path='/register' element={<Register/>} />
-      <Route path='/dashboard' element={<Dashboard/>}/>
-      {/* <Route path='' element={<PrivateRoute/>}> */}
+      <Route path='' element={<PrivateRoute/>}>
         <Route path='/profile' element={<Profile />} />
-      {/* </Route> */}
+      </Route>
+      <Route path="" element={<AdminPrivateRoute/>}>
+      <Route path='/dashboard' element={<Dashboard/>}/>
+      </Route>
     </Route>
   )
 );

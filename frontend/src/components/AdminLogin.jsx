@@ -1,35 +1,35 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { NavLink, useNavigate } from "react-router-dom";
-import { useLoginMutation } from "../slices/userApiSlice";
-import { setCredential } from "../slices/authSlices";
+import { useNavigate } from "react-router-dom";
+import { useAdminLoginMutation } from "../slices/adminSlices";
+import { setAdminCredentials } from "../slices/authSlices";
 import { toast } from 'react-toastify';
 
-function Login() {
 
+function AdminLogin() {
     const [email, setEmaiil] = useState('')
     const [password, setPassword] = useState('')
 
     const dispatch = useDispatch()
     const navigate = useNavigate()
 
-    const [login] = useLoginMutation();
+    const [login] = useAdminLoginMutation();
 
     
-    const {userInfo} = useSelector((state)=>state.auth)
+    const {adminInfo} = useSelector((state)=>state.auth)
     
     useEffect(()=>{
-        if(userInfo){
-            navigate('/')
+        if(adminInfo){
+            navigate('/dashboard')
         }
-    },[navigate, userInfo])
+    },[navigate, adminInfo])
 
     const submitHandler = async(e)=>{
         e.preventDefault();
         try {
             const res = await login({email, password}).unwrap();
-            dispatch(setCredential({...res}))
-            navigate('/')
+            dispatch(setAdminCredentials({...res}))
+            navigate('/dashboard')
         } catch (err) {
             toast.error(err?.data?.message || err.error);
         }
@@ -41,7 +41,7 @@ function Login() {
         <div className="relative flex w-96 flex-col rounded-xl bg-white bg-clip-border text-gray-700 shadow-md">
           <div className="relative mx-4 -mt-6 mb-4 grid h-28 place-items-center overflow-hidden rounded-xl bg-gradient-to-tr from-cyan-600 to-cyan-400 bg-clip-border text-white shadow-lg shadow-cyan-500/40">
             <h3 className="block font-sans text-3xl font-semibold leading-snug tracking-normal text-white antialiased">
-              Sign In
+             Admin Sign In
             </h3>
           </div>
 
@@ -83,21 +83,11 @@ function Login() {
             >
               Sign In
             </button>
-            <p className="mt-6 flex justify-center font-sans text-sm font-light leading-normal text-inherit antialiased">
-              {`Don't have an account?`}
-              <NavLink
-                className="ml-1 block font-sans text-sm font-bold leading-normal text-cyan-500 antialiased"
-                to={'/register'}
-              >
-                Sign up
-              </NavLink>
-            </p>
           </div>
           
         </div>
       </div>
     );
-  }
-  
-  export default Login;
-  
+}
+
+export default AdminLogin
