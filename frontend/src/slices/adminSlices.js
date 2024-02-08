@@ -42,13 +42,6 @@ export const adminApiSlice = apiSlice.injectEndpoints({
       })
     }),
 
-    getUpdateUser: builder.mutation({
-      query: (data) => ({
-        url: `${ADMIN_URL}/users/update-user?id=${data}`,
-        method: 'GET',
-      })
-    }),
-
     updateUserData: builder.mutation({
       query: (data) => ({
         url: `${ADMIN_URL}/users/update-user`,
@@ -73,7 +66,6 @@ export const {
   useGetUsersDataMutation,
   useDeleteUserMutation,
   useAddNewUserMutation,
-  useGetUpdateUserMutation,
   useUpdateUserDataMutation,
   usePutBlockUserMutation
 } = adminApiSlice;

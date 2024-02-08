@@ -5,6 +5,7 @@ import { useUpdateMutation } from "../slices/userApiSlice";
 import { setCredential } from "../slices/authSlices";
 import { toast } from "react-toastify";
 
+
 function Profile() {
   const [imagePreview, setImagePreview] = useState(
     "181-1814767_person-svg-png-icon-free-download-profile-icon.png"
@@ -92,7 +93,8 @@ function Profile() {
   };
 
   return (
-    <div className="flex justify-center h-svh items-center">
+    
+      <div className="flex justify-center h-svh items-center">
       <div className=" w-3/5 flex rounded-md border-2 shadow-md max-md:grid max-md:w-4/5 max-sm:w-full  bg-white">
         <div className="w-1/2 flex items-center justify-center">
           <div className="flex ">
@@ -155,7 +157,7 @@ function Profile() {
               className="rounded-md border w-full border-blue-gray-200 px-3 py-3 font-sans text-sm font-normal  outline outline-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 focus:border-2 focus:border-cyan-500"
             />
           </div>
-          <dir>
+          <div>
             <button
               onClick={submitUpdateHandler}
               data-ripple-light="true"
@@ -164,10 +166,11 @@ function Profile() {
             >
               Update Profile
             </button>
-          </dir>
+          </div>
         </div>
       </div>
     </div>
+
   );
 }
 

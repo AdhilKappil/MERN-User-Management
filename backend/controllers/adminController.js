@@ -50,9 +50,7 @@ const logoutAdmin = asyncHandler(async (req, res) => {
 //route     GET /api/admin/users
 //@access   Private
 const getUsers = asyncHandler(async (req, res) => {
-    console.log('fjfjkjfdkjkj');
   const user = await User.find({}).select("-password");
-  console.log('user', user);
   res.json({ user });
 });
 
@@ -61,14 +59,14 @@ const getUsers = asyncHandler(async (req, res) => {
 //@access   Private
 const deleteUser = asyncHandler(async (req, res) => {
   const userId = req.query.id;
-  console.log(userId, "userId");
   if (!userId) {
     res.status(400);
     throw new Error("Invalid user data");
   }
 
-  const deletedUser = await User.findByIdAndRemove(userId);
+  const deletedUser = await User.findByIdAndDelete(userId); 
   if (deletedUser) {
+    console.log('deleted');
     res.status(200).json({ message: "User deleted successfully" });
   } else {
     res.status(404);
@@ -104,19 +102,7 @@ const addUser = asyncHandler(async (req, res) => {
   }
 });
 
-// @desc    Get user Profile
-//route     GET /api/admin/users/update
-//@access   Private
-const getUpdateUserProfile = asyncHandler(async (req, res) => {
-  const userId = req.query.id;
-  const user = await User.findOne({ _id: userId }).select("-password");
-  if (user) {
-    res.status(200).json(user);
-  } else {
-    res.status(400);
-    throw new Error("User not found");
-  }
-});
+
 // @desc    Block /Unblock the user
 //route     PATCH /api/admin/users/unblock-block
 //@access   Private
@@ -134,6 +120,7 @@ const blockUnblockUser = asyncHandler(async (req, res) => {
 //route     PUT /api/admin/users/update
 //@access   Private
 const updateUserProfile = asyncHandler(async (req, res) => {
+  console.log('inside the update profiel controller');
   const user = await User.findById(req.body._id);
   if (user) {
     // if (req.file) {
@@ -187,6 +174,5 @@ export {
   deleteUser,
   addUser,
   blockUnblockUser,
-  getUpdateUserProfile,
   updateUserProfile,
 };
