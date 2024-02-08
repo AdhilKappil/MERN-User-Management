@@ -8,12 +8,6 @@ import dotenv from "dotenv";
 import generateToken from "../utils/genarateToken.js";
 dotenv.config();
 
-// cloudinary.v2.config({
-//   cloud_name: process.env.CLOUDINARY_NAME,
-//   api_key: process.env.CLOUDINARY_KEY,
-//   api_secret: process.env.CLOUDINARY_SECRET,
-//   secure: true,
-// });
 
 // @desc    Auth admin/set token
 //route     POST /api/admin/auth
@@ -35,6 +29,7 @@ const authAdmin = asyncHandler(async (req, res) => {
   res.status(200).json({ message: "Auth Admin" });
 });
 
+
 // @desc    Logout admin
 //route     POST /api/admin/logout
 //@access   Public
@@ -46,6 +41,7 @@ const logoutAdmin = asyncHandler(async (req, res) => {
   res.status(200).json({ message: "Admin Logged Out" });
 });
 
+
 // @desc    User data
 //route     GET /api/admin/users
 //@access   Private
@@ -53,6 +49,7 @@ const getUsers = asyncHandler(async (req, res) => {
   const user = await User.find({}).select("-password");
   res.json({ user });
 });
+
 
 // @desc    Delete user
 //route     DELETE /api/admin/users/delete
@@ -73,6 +70,7 @@ const deleteUser = asyncHandler(async (req, res) => {
     throw new Error("Invalid user data");
   }
 });
+
 
 // @desc    Add new user
 //route     POST /api/admin/users/add-user
@@ -110,11 +108,12 @@ const blockUnblockUser = asyncHandler(async (req, res) => {
   const userId = req.query.id;
   const user = await User.findOne({ _id: userId }).select("-password");
   if (user) {
-    user.isBlocked = !user.isBlocked;
+    user.isStatus = !user.isStatus;
     await user.save();
   }
   res.status(200).json(user);
 });
+
 
 // @desc    Update user Profile
 //route     PUT /api/admin/users/update
@@ -123,23 +122,6 @@ const updateUserProfile = asyncHandler(async (req, res) => {
   console.log('inside the update profiel controller');
   const user = await User.findById(req.body._id);
   if (user) {
-    // if (req.file) {
-    //   const result = await cloudinary.uploader.upload(req.file.path);
-    //   user.imageUrl = result.secure_url || null;
-
-    //   const filePath = path.join(
-    //     "backend",
-    //     "public",
-    //     "images",
-    //     req.file.filename
-    //   );
-
-    //   fs.unlink(filePath, (err) => {
-    //     if (err) {
-    //       console.error("Error in deleting file", err);
-    //     }
-    //   });
-    // }
     user.name = req.body.name || user.name;
     user.email = req.body.email || user.email;
     user.mobile = req.body.mobile || user.mobile
@@ -156,16 +138,14 @@ const updateUserProfile = asyncHandler(async (req, res) => {
       email: updatedUser.email,
       mobile: updatedUser.mobile
     };
-
-    // if (updatedUser.imageUrl) {
-    //   response.imageUrl = updatedUser.imageUrl;
-    // }
     res.status(200).json(response);
   } else {
     res.status(404);
     throw new Error("User not found");
   }
 });
+
+
 
 export {
   authAdmin,

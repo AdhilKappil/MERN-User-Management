@@ -94,6 +94,12 @@ function Profile() {
 
   return (
     
+    <div>
+       <div className="w-full flex justify-center">
+       <h1 className="mb-5 text-3xl  font-bold mt-24 absolute">
+              Profile
+            </h1>
+       </div>
       <div className="flex justify-center h-svh items-center">
       <div className=" w-3/5 flex rounded-md border-2 shadow-md max-md:grid max-md:w-4/5 max-sm:w-full  bg-white">
         <div className="w-1/2 flex items-center justify-center">
@@ -117,7 +123,7 @@ function Profile() {
           <div>
             <input
               onChange={(e) => setName(e.target.value)}
-              placeholder=""
+              placeholder="Name"
               type="text"
               value={name}
               className="rounded-md w-full border border-blue-gray-200 px-3 py-3 font-sans text-sm font-normal  outline outline-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 focus:border-2 focus:border-cyan-500"
@@ -126,7 +132,7 @@ function Profile() {
           <div>
             <input
               onChange={(e) => setMobile(e.target.value)}
-              placeholder=""
+              placeholder="Mobile"
               type="text"
               value={mobile}
               className="rounded-md w-full border border-blue-gray-200 px-3 py-3 font-sans text-sm font-normal  outline outline-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 focus:border-2 focus:border-cyan-500"
@@ -135,7 +141,7 @@ function Profile() {
           <div>
             <input
               onChange={(e) => setEmail(e.target.value)}
-              placeholder=""
+              placeholder="Email"
               type="email"
               value={email}
               className="rounded-md border w-full border-blue-gray-200 px-3 py-3 font-sans text-sm font-normal  outline outline-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 focus:border-2 focus:border-cyan-500"
@@ -170,7 +176,7 @@ function Profile() {
         </div>
       </div>
     </div>
-
+    </div>
   );
 }
 

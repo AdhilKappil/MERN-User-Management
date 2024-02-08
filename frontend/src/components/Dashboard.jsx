@@ -9,6 +9,9 @@ import {
 import { useEffect, useState } from "react";
 import Modal from "react-modal";
 import { toast } from "react-toastify";
+import { useDispatch, useSelector } from "react-redux";
+import { logOut } from "../slices/authSlices";
+import { NavLink } from "react-router-dom";
 
 Modal.setAppElement("#root");
 
@@ -43,6 +46,9 @@ function Dashboard() {
   const [deleteUser] = useDeleteUserMutation();
   const [updateUser] = useUpdateUserDataMutation();
 
+  const { userInfo } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
+
   useEffect(() => {
     async function fetchUser() {
       const res = await getUsersData().unwrap("");
@@ -75,7 +81,28 @@ function Dashboard() {
       setData((prevData) => !prevData);
       setUserId(null);
       setIsOpen(false);
+      if (userInfo && userInfo._id === userId) {
+        dispatch(logOut());
+      }
     }
+  };
+
+  const handleBlockUnblockUser = async (userId) => {
+    const response = await putBlockUser(userId).unwrap("");
+    if (userInfo && userInfo._id === userId) {
+        dispatch(logOut());
+      }
+    const updatedUsers = users.map((user) => {
+      if (user._id === userId) {
+        return {
+          ...user,
+          isStatus: response.isStatus, // Update the user's isBlocked status
+        };
+      }
+      return user;
+    });
+
+    setUsers(updatedUsers);
   };
 
   const handleDeleteClick = (userId) => {
@@ -87,9 +114,6 @@ function Dashboard() {
     setIsOpen(false);
   };
 
-  const cloeUpdateModal = () => {
-    setUpdateOpen(false);
-  };
 
   const handleUpdate = (obj) => {
     setUserId(obj._id);
@@ -155,7 +179,7 @@ function Dashboard() {
               User Management
             </h1>
           </div>
-          <div className="flex">
+          <div className="flex ml-16">
             <input
               placeholder="Search Users"
               value={search}
@@ -166,6 +190,17 @@ function Dashboard() {
               Search
             </button>
           </div>
+            <div>
+             <NavLink to={'/addNewUser'}>
+             <button
+             data-ripple-light="true"
+             type="button"
+             className="block select-none rounded-lg bg-gradient-to-tr from-cyan-600 to-cyan-400 py-3 px-6 text-center align-middle font-sans text-xs font-bold uppercase text-white shadow-md shadow-cyan-500/20 transition-all hover:shadow-lg hover:shadow-cyan-500/40 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+           >
+             Add User
+           </button>
+             </NavLink>
+            </div>
         </div>
         <table className="min-w-full bg-white border border-gray-300 mt-3">
           <thead>
@@ -173,7 +208,9 @@ function Dashboard() {
               <th className="border border-gray-300 p-2">Name</th>
               <th className="border border-gray-300 p-2">Email</th>
               <th className="border border-gray-300 p-2">Mobile</th>
-              <th className="border border-gray-300 p-2 w-44">Action</th>
+              <th className="border border-gray-300 p-2 flex items-center">
+                Action
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -182,17 +219,44 @@ function Dashboard() {
                 <td className="border-r border-gray-300 p-2">{obj.name}</td>
                 <td className="border-r border-gray-300 p-2">{obj.email}</td>
                 <td className="border-r border-gray-300 p-2">{obj.mobile}</td>
-                <td className="flex justify-center space-x-5">
-                  <button onClick={() => handleUpdate(obj)} className="mt-2">
-                    <FaUserEdit size={25} />
+                <td className="flex justify-between p-2">
+                  <button
+                    onClick={() => handleUpdate(obj)}
+                    className="hover:scale-105"
+                  >
+                    <FaUserEdit
+                      size={25}
+                      style={{ color: "black", transition: "color 0.3s ease" }}
+                      onMouseOver={(e) => (e.target.style.color = "blue")}
+                      onMouseOut={(e) => (e.target.style.color = "black")}
+                    />
                   </button>
                   <button
                     onClick={() => handleDeleteClick(obj._id)}
-                    className="mt-2"
+                    className="mt-2 hover:scale-105"
                   >
-                    <MdDelete size={25} />
+                    <MdDelete
+                      size={25}
+                      style={{ color: "black", transition: "color 0.3s ease" }}
+                      onMouseOver={(e) => (e.target.style.color = "red")}
+                      onMouseOut={(e) => (e.target.style.color = "black")}
+                    />
                   </button>
-                  <button className="mt-2">Block</button>
+                  {obj.isStatus ? (
+                    <button
+                      onClick={() => handleBlockUnblockUser(obj._id)}
+                      className=" h-10 w-20 hover:bg-red-700 bg-black rounded-lg text-white hover:scale-105"
+                    >
+                      Block
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => handleBlockUnblockUser(obj._id)}
+                      className="h-10 w-20 hover:bg-green-500 bg-black rounded-lg text-white hover:scale-105"
+                    >
+                      Un Block
+                    </button>
+                  )}
                 </td>
               </tr>
             ))}
@@ -227,7 +291,6 @@ function Dashboard() {
 
       <Modal
         isOpen={updateModalOpen}
-        onRequestClose={cloeUpdateModal}
         style={customStyles}
         contentLabel="Update User Modal"
       >

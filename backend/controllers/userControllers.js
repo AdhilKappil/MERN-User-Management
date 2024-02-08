@@ -14,16 +14,22 @@ const authUser = asyncHandler(async(req,res)=>{
     const {email, password} = req.body
     
     const user = await User.findOne({email})
+  
 
     if(user && (await user.matchPassword(password))){
+
+      if(!user.isStatus){
+        res.status(401);
+        throw new Error('User is Blocked')
+      }else{
         genarateToken(res, user._id)
         res.status(201).json({
             _id: user._id,
             name:user.name,
             email: user.email,
             mobile:user.mobile
-
-        })
+          })
+      }
     }else{
         res.status(401);
         throw new Error('Invalid email or password')

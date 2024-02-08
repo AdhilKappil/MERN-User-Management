@@ -22,6 +22,10 @@ const userSchema = mongoose.Schema({
     profileImg:{
         type:String 
     },
+    isStatus:{
+        type:Boolean,
+        default : true
+    },
     
 },{
     timestamp: true

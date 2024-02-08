@@ -19,6 +19,7 @@ import { ThemeProvider } from "@material-tailwind/react";
 import AdminLogin from './components/adminLogin.jsx';
 import AdminPrivateRoute from './components/AdminPrivateRour.jsx';
 import PrivateRoute from './components/PrivateRoute.jsx';
+import AddNewUser from './components/AddNewUser.jsx';
 
 
 
@@ -38,6 +39,7 @@ const router = createBrowserRouter(
       </Route>
       <Route path="" element={<AdminPrivateRoute/>}>
       <Route path='/dashboard' element={<Dashboard/>}/>
+      <Route path='addNewUser' element={<AddNewUser/>} />
       </Route>
     </Route>
   )

@@ -51,7 +51,7 @@ export function StickyNavbar() {
             </NavLink>
             {/* Log In Button */}
             <span>
-              {userInfo ? (
+              { userInfo ? (
                 <span className="font-semibold text-sm mr-3">{userInfo.name}</span>
               ) : (
                 <NavLink to="/login">
@@ -63,9 +63,9 @@ export function StickyNavbar() {
             </span>
 
             {/* Log Out Button */}
-            <Button onClick={logoutHandler} variant="gradient" size="sm">
+            {userInfo &&  <Button onClick={logoutHandler} variant="gradient" size="sm">
               <span>Log Out</span>
-            </Button>
+            </Button>}
           </div>
           <IconButton
             variant="text"
