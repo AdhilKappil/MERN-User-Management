@@ -5,12 +5,13 @@ import {
   usePutBlockUserMutation,
   useDeleteUserMutation,
   useUpdateUserDataMutation,
+  useAdminLogoutMutation,
 } from "../slices/adminSlices";
 import { useEffect, useState } from "react";
 import Modal from "react-modal";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
-import { logOut } from "../slices/authSlices";
+import { adminlogout, logOut } from "../slices/authSlices";
 import { NavLink } from "react-router-dom";
 
 Modal.setAppElement("#root");
@@ -45,6 +46,7 @@ function Dashboard() {
   const [putBlockUser] = usePutBlockUserMutation();
   const [deleteUser] = useDeleteUserMutation();
   const [updateUser] = useUpdateUserDataMutation();
+  const [adminLogout] = useAdminLogoutMutation();
 
   const { userInfo } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
@@ -170,8 +172,26 @@ function Dashboard() {
     }
   };
 
+
+  // log out handling
+  const handleLogout = async () => {
+    try {
+      await adminLogout().unwrap();
+      dispatch(adminlogout());
+      navigate("/admin");
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+
   return (
-    <div className="h-svh flex items-center justify-center">
+    <div className="w-full h-20 bg-white border-2 shadow-md">
+        <span className="text-xl font-bold absolute mt-4 ml-5">Welcome Admin</span> 
+        <div className="w-full flex justify-end">
+            <button onClick={handleLogout} className="h-10 w-20 hover:bg-red-700 bg-black rounded-lg text-white hover:scale-105 mr-10 mt-5">Log Out</button>
+        </div>
+    <div className="flex items-center justify-center mt-20">
       <div className="overflow-x-auto h-3/5 w-3/5 max-lg:w-ful p-5 max-lg:px-4 rounded-md border-2 shadow-md bg-white">
         <div className="flex justify-around max-sm:grid items-center">
           <div>
@@ -205,6 +225,7 @@ function Dashboard() {
         <table className="min-w-full bg-white border border-gray-300 mt-3">
           <thead>
             <tr className="bg-gray-100">
+            <th className="border border-gray-300 p-2">Image</th>
               <th className="border border-gray-300 p-2">Name</th>
               <th className="border border-gray-300 p-2">Email</th>
               <th className="border border-gray-300 p-2">Mobile</th>
@@ -216,6 +237,9 @@ function Dashboard() {
           <tbody>
             {filteredUsers.map((obj, index) => (
               <tr key={index} className="border-b border-gray-300">
+                <td className="border-r border-gray-300 flex justify-center">
+                    <img src={obj.profileImg} className="h-10 w-10 rounded-full mt-2" alt="" />
+                </td>
                 <td className="border-r border-gray-300 p-2">{obj.name}</td>
                 <td className="border-r border-gray-300 p-2">{obj.email}</td>
                 <td className="border-r border-gray-300 p-2">{obj.mobile}</td>
@@ -350,6 +374,7 @@ function Dashboard() {
           </div>
         </div>
       </Modal>
+    </div>
     </div>
   );
 }

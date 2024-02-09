@@ -39,7 +39,7 @@ export function StickyNavbar() {
           href="#"
           className="mr-4 cursor-pointer py-1.5 font-medium"
         >
-          User Management
+          User Management 
         </Typography>
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-x-1">

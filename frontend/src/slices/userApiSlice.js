@@ -34,7 +34,17 @@ export const userApiSlice = apiSlice.injectEndpoints({
               body: data,
             }),
           }),
+
+          setImg: builder.mutation({
+            query: (data) => ({
+              url: `${USER_URL}/addProfile`,
+              method: 'POST', // Corrected method to POST
+              body: data,
+            }), 
+          }),
+          
     })
 })
 
-export const {useLoginMutation, useLogoutMutation, useRegisterMutation, useUpdateMutation} = userApiSlice
+export const {useLoginMutation, useLogoutMutation, useRegisterMutation, useUpdateMutation,
+useSetImgMutation} = userApiSlice

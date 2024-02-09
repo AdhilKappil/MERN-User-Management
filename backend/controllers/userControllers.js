@@ -27,7 +27,8 @@ const authUser = asyncHandler(async(req,res)=>{
             _id: user._id,
             name:user.name,
             email: user.email,
-            mobile:user.mobile
+            mobile:user.mobile,
+            profileImg : user.profileImg
           })
       }
     }else{
@@ -47,6 +48,8 @@ const registerUser = asyncHandler(async(req,res)=>{
 
     const {name, email, mobile, password} = req.body
 
+    const profileImg = "181-1814767_person-svg-png-icon-free-download-profile-icon.png"
+
     const userExists = await User.findOne({email})
 
     if(userExists){
@@ -58,7 +61,9 @@ const registerUser = asyncHandler(async(req,res)=>{
          name,
          email,
          password,
-         mobile
+         mobile,
+         profileImg
+
     }))
 
     if(user){
@@ -67,7 +72,8 @@ const registerUser = asyncHandler(async(req,res)=>{
             _id: user._id,
             name:user.name,
             email: user.email,
-            mobile:user.mobile  
+            mobile:user.mobile,  
+            profileImg: user.profileImg
         })
     }else{
         res.status(400);
@@ -102,7 +108,8 @@ const getUserProfile = asyncHandler(async(req,res)=>{
       _id: user._id,
       name: user.name,
       email: user.email,
-      mobile: user.mobile
+      mobile: user.mobile,
+      url : user.profileImg
     });
   } else {
     res.status(404);
@@ -142,11 +149,45 @@ const updateUserProfile = asyncHandler(async(req,res)=>{
 })
 
 
+// @desc    Register a new user
+// @route   POST /api/addProfile
+// @access  Public
+const setUserProfile = asyncHandler(async(req, res) => {
+  try {
+    const { url, id } = req.body;
+
+    const user = await User.findById(id);
+
+    if (user) {
+      user.profileImg = url;
+      
+      await user.save();
+
+      res.status(201).json({
+            _id: user._id,
+            name:user.name,
+            email: user.email,
+            mobile:user.mobile,  
+            profileImg: user.profileImg
+      })
+      
+    } else {
+      res.status(404);
+      throw new Error('User not found');
+    }
+  } catch (error) {
+    console.error('Error setting profile image:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+
 
 export {
     authUser,
     registerUser,
     logoutUser,
     getUserProfile,
-    updateUserProfile
+    updateUserProfile,
+    setUserProfile
 }
